@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <script src="jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+      var faye_client = undefined;
+
+      $(function() {
+        var $submitter_form = $("#submitter_form");
+
+        $("#btn_send").click(function() {
+          if (faye_client == undefined) {
+            var host_path = $("#host").val();
+
+            $.ajax({
+              url       : host_path + "/client.js",
+              dataType  : "script",
+              success   : function() {
+                faye_client = new Faye.Client(host_path);
+                submit_form();
+              }
+            });
+          } else {
+            submit_form();
+          }
+        });
+
+        var submit_form = function() {
+          var channel = $("#channel").val();
+          var message = $("#message").val();
+
+          var publication = faye_client.publish(channel, { text: message });
+          publication.then(function() {
+            alert("Message published");
+          }, function(error) {
+            alert("Message publication failed: " + error.message);
+          });
+        };
+      });
+    </script>
+  </head>
+
+  <body>
+    <form id="submitter_form" name="submitter">
+      <label for="host">Host:</label> <input id="host" name="host" type="text"><br/>
+      <label for="channel">Channel:</label> <input id="channel" name="channel" type="text"><br/>
+      <label for="message">Message:</label> <input id="message" name="message" type="text"><br/>
+      <button id="btn_send" type="button">Send</button>
+    </form>
+  </body>
+</html>
