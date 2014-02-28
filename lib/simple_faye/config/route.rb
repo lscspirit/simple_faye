@@ -1,6 +1,8 @@
 module SimpleFaye
   module Config
     class Route
+      attr_reader :processor, :action
+
       def initialize(regex, processor, action)
         @processor = processor.to_s
         @action = action.to_sym
@@ -19,17 +21,6 @@ module SimpleFaye
       # Matches a channel name against the channel regex of this route
       def match(channel)
         @regex.match(channel)
-      end
-
-      #
-      # Attribute Accessors
-      #
-      def processor
-        @processor
-      end
-
-      def action
-        @action
       end
     end
   end
