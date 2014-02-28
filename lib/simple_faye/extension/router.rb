@@ -2,6 +2,7 @@ module SimpleFaye
   module Extension
     class Router
       include Faye::Logging
+      include SimpleFaye::Bayeux::Error
 
       #
       # Constructor
@@ -19,7 +20,7 @@ module SimpleFaye
         rescue => ex
           # in case of runtime error, log the stack trace and return an '_unknown_error' error to the client
           fatal ex.message + "\n  " + ex.backtrace.join("\n  ")
-          message['error'] = '500:simple_faye:Unknown error'
+          message['error'] = bayuex_error :server_error, 'Unknown error', 'simple_faye'
         end
 
         callback.call message
@@ -49,7 +50,7 @@ module SimpleFaye
             processor.perform_action matched.action
           else
             # if there is no matching route, so return a invalid channel error
-            message['error'] = "404:simple_faye,#{channel}#{command ? "##{command}" : ''}:No route found for channel and command"
+            message['error'] = bayeux_error :channel_unknown, 'No route found for channel and command', 'simple_faye', "#{channel}#{command ? "##{command}" : ''}"
           end
         end
       end

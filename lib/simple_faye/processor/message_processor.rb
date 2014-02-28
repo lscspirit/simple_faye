@@ -4,6 +4,7 @@ module SimpleFaye
   module Processor
     class MessageProcessor
       include Faye::Logging
+      include SimpleFaye::Bayeux::Error
 
       # Properties
       class << self; attr_accessor :filter_chain end

@@ -1,5 +1,7 @@
 require "simple_faye/version"
 
+require "simple_faye/bayeux/error"
+
 require "simple_faye/extension/router"
 
 require "simple_faye/config/route"
