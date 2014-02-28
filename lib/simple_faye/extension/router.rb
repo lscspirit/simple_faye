@@ -19,7 +19,7 @@ module SimpleFaye
         rescue => ex
           # in case of runtime error, log the stack trace and return an '_unknown_error' error to the client
           fatal ex.message + "\n  " + ex.backtrace.join("\n  ")
-          message['error'] = '_unknown_error'
+          message['error'] = '500:simple_faye:Unknown error'
         end
 
         callback.call message
@@ -37,9 +37,11 @@ module SimpleFaye
       # Dispatches the incoming message to the appropriate MessageProcessor
       # and perform the designated action
       def route_and_perform(message)
+        channel = message['channel']
         # find matching route unless it is a Faye meta message
-        unless message['channel'].match(/\/meta\/.+/)
-          matched = match_route message['channel']
+        unless channel.match(/\/meta\/.+/)
+          command = message['data']['__command']
+          matched = match_route channel, command
 
           if matched
             # if there is a matching route then perform the designated action
@@ -47,17 +49,17 @@ module SimpleFaye
             processor.perform_action matched.action
           else
             # if there is no matching route, so return a invalid channel error
-            message['error'] = '_invalid_channel'
+            message['error'] = "404:simple_faye,#{channel}#{command ? "##{command}" : ''}:No route found for channel and command"
           end
         end
       end
 
-      # Finds a matching route for the specified channel
+      # Finds a matching route for the specified channel and command
       # Returns a Route object if found; otherwise nil is returned
-      def match_route(channel)
+      def match_route(channel, command)
         # go through the list of channel mappings to find a matching route
         @routing_map.mappings.each do |route|
-          return route if route.match(channel)
+          return route if route.match(channel, command)
         end
 
         nil

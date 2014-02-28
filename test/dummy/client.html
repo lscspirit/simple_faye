@@ -26,9 +26,10 @@
 
         var submit_form = function() {
           var channel = $("#channel").val();
+          var command = $("#command").val();
           var message = $("#message").val();
 
-          var publication = faye_client.publish(channel, { text: message });
+          var publication = faye_client.publish(channel, { __command: command, text: message });
           publication.then(function() {
             alert("Message published");
           }, function(error) {
@@ -43,6 +44,7 @@
     <form id="submitter_form" name="submitter">
       <label for="host">Host:</label> <input id="host" name="host" type="text"><br/>
       <label for="channel">Channel:</label> <input id="channel" name="channel" type="text"><br/>
+      <label for="command">Command:</label> <input id="command" name="command" type="text"><br/>
       <label for="message">Message:</label> <input id="message" name="message" type="text"><br/>
       <button id="btn_send" type="button">Send</button>
     </form>
