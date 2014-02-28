@@ -1,0 +1,72 @@
+module SimpleFaye
+  module Processor
+    class Filter
+      attr_reader :filter_method, :options
+
+      #
+      # Constructor
+      #
+      def initialize(filter_method, options)
+        @filter_method = filter_method
+        @options = options
+      end
+
+      #
+      # Filter Matching
+      #
+      def before?
+        false
+      end
+
+      def after?
+        false
+      end
+
+      def should_apply? type, action
+        type_matched?(type) && action_matched?(action)
+      end
+
+      def type_matched? type
+        case type
+          when :before
+            before?
+          when :after
+            after?
+          else
+            false
+        end
+      end
+
+      def action_matched? action
+        true
+      end
+
+      #
+      # Execution
+      #
+      def run(context)
+        context.send self.filter_method
+      end
+    end
+
+    class BeforeFilter < Filter
+      def before?
+        true
+      end
+
+      def after?
+        false
+      end
+    end
+
+    class AfterFilter < Filter
+      def before?
+        false
+      end
+
+      def after?
+        true
+      end
+    end
+  end
+end
