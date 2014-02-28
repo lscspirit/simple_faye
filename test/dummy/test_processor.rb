@@ -1,5 +1,5 @@
 class TestProcessor < ::SimpleFaye::Processor::MessageProcessor
-  before_action :before_hook
+  before_action :before_hook, :only => :hh
   before_action :before_hook_2
   after_action  :after_hook
   after_action  :after_hook_2

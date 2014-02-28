@@ -38,6 +38,9 @@ module SimpleFaye
       end
 
       def action_matched? action
+        return false if options[:except] && [options[:except]].flatten.include?(action)
+        return false if options[:only] && ![options[:only]].flatten.include?(action)
+
         true
       end
 
