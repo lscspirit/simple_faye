@@ -42,9 +42,13 @@ module SimpleFaye
       end
 
       def execute_with_filters(action)
-        self.class.filter_chain.run_filters self, :before, action
-        yield if block_given?
-        self.class.filter_chain.run_filters self, :after, action
+        if self.class.filter_chain.run_filters self, :before, action
+          # only continues if before filters are successfully executed
+          yield if block_given?   # executes main action
+
+          # executes after filters, no filter will run if the message['error'] field is already set
+          self.class.filter_chain.run_filters self, :after, action
+        end
       end
     end
   end
