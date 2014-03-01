@@ -8,7 +8,7 @@ module SimpleFaye
         raise ArgumentError, 'Route\'s action is missing' unless action
 
         @command = command.to_s if command
-        @processor = processor.to_s
+        @processor = processor
         @action = action.to_sym
 
         # if the regex is a string, then turns it into a Regexp

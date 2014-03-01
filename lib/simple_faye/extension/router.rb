@@ -68,11 +68,11 @@ module SimpleFaye
 
       # Creates an instance of the specified processor
       # Execeptions are raised if the processor is not found or it is not a subclass of MessageProcessor
-      def instantiate_processor(processor_name, message)
+      def instantiate_processor(processor, message)
         # check if the processor is a constant
-        klass = Kernel.const_get(processor_name)
+        klass = processor.is_a?(Class) ? processor : Kernel.const_get(processor)
         # check if klass is a subclass of MessageProcessor
-        raise "#{processor_name} is not a SimpleFaye::Processor::MessageProcessor" unless klass <= SimpleFaye::Processor::MessageProcessor
+        raise "#{processor} is not a SimpleFaye::Processor::MessageProcessor" unless klass <= SimpleFaye::Processor::MessageProcessor
 
         # creates an instance of klass (MessageProcessor)
         klass.new message
