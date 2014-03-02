@@ -5,9 +5,7 @@
       var faye_client = undefined;
 
       $(function() {
-        var $submitter_form = $("#submitter_form");
-
-        $("#btn_send").click(function() {
+        var load_and_run = function(cb) {
           if (faye_client == undefined) {
             var host_path = $("#host").val();
 
@@ -16,12 +14,20 @@
               dataType  : "script",
               success   : function() {
                 faye_client = new Faye.Client(host_path);
-                submit_form();
+                cb();
               }
             });
           } else {
-            submit_form();
+            cb();
           }
+        };
+
+        $("#btn_send").click(function() {
+          load_and_run(submit_form);
+        });
+
+        $("#btn_subscribe").click(function() {
+          load_and_run(subscribe_channel);
         });
 
         var submit_form = function() {
@@ -36,6 +42,13 @@
             alert("Message publication failed: " + error.message);
           });
         };
+
+        var subscribe_channel = function() {
+          var channel = $("#channel").val();
+          faye_client.subscribe(channel, function(message) {
+
+          });
+        };
       });
     </script>
   </head>
@@ -47,6 +60,7 @@
       <label for="command">Command:</label> <input id="command" name="command" type="text"><br/>
       <label for="message">Message:</label> <input id="message" name="message" type="text"><br/>
       <button id="btn_send" type="button">Send</button>
+      <button id="btn_subscribe" type="button">Subscribe</button>
     </form>
   </body>
 </html>

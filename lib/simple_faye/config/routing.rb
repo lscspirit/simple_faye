@@ -9,7 +9,7 @@ module SimpleFaye
 
       # Maps a regular expression, representing channel name(s), to a specific processor AND action
       def map(channel_regex, options = {})
-        @mappings << Route.new(channel_regex, options[:command], options[:processor], options[:action])
+        @mappings << Route.new(channel_regex, options[:type], options[:command], options[:processor], options[:action])
       end
 
       #

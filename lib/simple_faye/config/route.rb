@@ -1,12 +1,21 @@
 module SimpleFaye
   module Config
     class Route
+      ROUTE_TYPES = [:publish, :subscribe, :unsubscribe]
+
       attr_reader :command, :processor, :action
 
-      def initialize(ch_regex, command, processor, action)
+      def initialize(ch_regex, type, command, processor, action)
+        # default values
+        type ||= :publish
+
+        # argument checks
         raise ArgumentError, 'Route\'s processor is missing' unless processor
         raise ArgumentError, 'Route\'s action is missing' unless action
+        raise ArgumentError, "#{type} is not a valid route type" unless ROUTE_TYPES.include?(type)
+        raise ArgumentError, '\'command\' option is not allowed when the route type is not :publish' if command && type != :publish
 
+        @type = type
         @command = command.to_s if command
         @processor = processor
         @action = action.to_sym
@@ -23,8 +32,8 @@ module SimpleFaye
       end
 
       # Matches a channel name against the channel regex and command of this route
-      def match(channel, command)
-        @regex.match(channel) && (command.nil? || command == @command)
+      def match(type, channel, command = nil)
+        @type == type && @regex.match(channel) && (command.nil? || command == @command)
       end
     end
   end

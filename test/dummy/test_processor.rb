@@ -9,6 +9,10 @@ class TestProcessor < ::SimpleFaye::Processor::MessageProcessor
     #message['error'] = 'has error'
   end
 
+  def subscribe
+    debug "subscribing"
+  end
+
   private
 
   def before_hook
@@ -20,10 +24,10 @@ class TestProcessor < ::SimpleFaye::Processor::MessageProcessor
   end
 
   def after_hook
-    debug "AFTERRRRRRRRRR #{message['data']['text']}"
+    debug "AFTERRRRRRRRRR"
   end
 
   def after_hook_2
-    debug "AFTER 2222 #{message['data']['text']}"
+    debug "AFTER 2222"
   end
 end
