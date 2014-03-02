@@ -7,16 +7,13 @@ module SimpleFaye
       include SimpleFaye::Bayeux::Error
 
       # Properties
-      class << self; attr_accessor :filter_chain end
       attr_reader :message
+      cattr_accessor :filter_chain
+      self.filter_chain = FilterChain.new
 
       # Constructor
       def initialize(msg)
         @message = msg
-      end
-
-      def self.inherited base
-        base.filter_chain = FilterChain.new
       end
 
       # Execution

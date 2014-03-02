@@ -1,5 +1,7 @@
 require "simple_faye/version"
 
+require "facets/module/mattr"
+
 require "simple_faye/bayeux/error"
 
 require "simple_faye/extension/router"
