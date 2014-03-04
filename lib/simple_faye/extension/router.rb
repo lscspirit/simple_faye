@@ -48,7 +48,7 @@ module SimpleFaye
           processor.perform_action matched.action
         elsif type != :meta
           # if there is no matching route AND this is not a /meta message, then return an invalid channel error
-          message['error'] = bayeux_error :channel_unknown, 'No route found for channel and command', 'simple_faye', type, "#{channel}#{command ? "##{command}" : ''}"
+          message['error'] = bayeux_error :channel_unknown, 'No route found for channel and command', 'simple_faye', type, "#{channel}#{command ? "@#{command}" : ''}"
         end
       end
 
