@@ -8,8 +8,14 @@ module SimpleFaye
 
       # Properties
       attr_reader :message
-      cattr_accessor :filter_chain
+      class << self; attr_accessor :filter_chain end
       self.filter_chain = FilterChain.new
+
+      # copies the filter chain in each subclass so that each will
+      # have its own instance and would not overwrites each other chain
+      def self.inherited(subclass)
+        subclass.filter_chain = self.filter_chain.dup
+      end
 
       # Constructor
       def initialize(msg)

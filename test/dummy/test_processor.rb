@@ -31,3 +31,27 @@ class TestProcessor < ::SimpleFaye::Processor::MessageProcessor
     debug "AFTER 2222"
   end
 end
+
+class SubProcessorOne < TestProcessor
+  before_action :method_one
+
+  def test
+    debug 'in sub processor one'
+  end
+
+  def method_one
+    debug "in method one"
+  end
+end
+
+class SubProcessorTwo < TestProcessor
+  before_action :method_two
+
+  def test
+    debug 'in sub processor two'
+  end
+
+  def method_two
+    debug "in method two"
+  end
+end

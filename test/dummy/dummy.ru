@@ -16,6 +16,9 @@ router.map_channel do |r|
   r.channel '/test_channel', :processor => TestProcessor do
     r.publish :command => 'test'
     r.subscribe :action => :subscribe
+
+    r.publish :command => 'test_sub1', :processor => SubProcessorOne, :action => :test
+    r.publish :command => 'test_sub2', :processor => SubProcessorTwo, :action => :test
   end
 
   r.publish /^\/regex_channel(\d)$/, :processor => :TestProcessor, :action => :again
