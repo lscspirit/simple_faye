@@ -33,7 +33,7 @@ module SimpleFaye
 
       # Matches a channel name against the channel regex and command of this route
       def match(type, channel, command = nil)
-        @type == type && @regex.match(channel) && (command.nil? || command == @command)
+        @type == type && @regex.match(channel) && (@command.nil? || command == @command)
       end
     end
   end
