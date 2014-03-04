@@ -14,6 +14,15 @@
               dataType  : "script",
               success   : function() {
                 faye_client = new Faye.Client(host_path);
+                faye_client.addExtension({
+                  outgoing: function(message, callback) {
+                    if (!message.ext) message.ext = {};
+                    message.ext.aid = $("#aid").val();
+                    message.ext.tk = $("#tk").val();
+
+                    callback(message);
+                  }
+                });
                 cb();
               }
             });
@@ -45,8 +54,14 @@
 
         var subscribe_channel = function() {
           var channel = $("#channel").val();
-          faye_client.subscribe(channel, function(message) {
+          var subscription = faye_client.subscribe(channel, function(message) {
 
+          });
+
+          subscription.then(function() {
+            alert("Channel subscribed");
+          }, function(error) {
+            alert("Channel subscription failed: " + error.message);
           });
         };
       });
@@ -59,6 +74,8 @@
       <label for="channel">Channel:</label> <input id="channel" name="channel" type="text"><br/>
       <label for="command">Command:</label> <input id="command" name="command" type="text"><br/>
       <label for="message">Message:</label> <input id="message" name="message" type="text"><br/>
+      <label for="aid">Account Id:</label> <input id="aid" name="aid" type="text"><br/>
+      <label for="tk">Token:</label> <input id="tk" name="tk" type="text"><br/>
       <button id="btn_send" type="button">Send</button>
       <button id="btn_subscribe" type="button">Subscribe</button>
     </form>

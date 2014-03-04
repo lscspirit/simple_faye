@@ -14,7 +14,7 @@ Faye::WebSocket.load_adapter 'thin'
 router = SimpleFaye::Extension::Router.new
 router.map_channel do |r|
   r.channel '/test_channel', :processor => TestProcessor do
-    r.publish :command => 'test', :action => :test
+    r.publish :command => 'test'
     r.subscribe :action => :subscribe
   end
 

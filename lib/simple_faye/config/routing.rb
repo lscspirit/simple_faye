@@ -21,6 +21,9 @@ module SimpleFaye
         options = extract_options! args
         options[:channel] = args.shift unless args.empty?
 
+        # infers the :action from :command if :action is not specified
+        options[:action] ||= options[:command].to_sym if options[:command]
+
         options = process_options options, :valid => [:channel, :command, :processor, :action], :require => [:channel, :processor, :action]
 
         map options[:channel], :publish, options[:command], options[:processor], options[:action]
