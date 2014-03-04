@@ -33,6 +33,9 @@ module SimpleFaye
         options = extract_options! args
         options[:channel] = args.shift unless args.empty?
 
+        # uses the default action 'subscribe' if :action is not specified
+        options[:action] ||= 'subscribe'
+
         options = process_options options, :valid => [:channel, :processor, :action], :require => [:channel, :processor, :action]
 
         map options[:channel], :subscribe, nil, options[:processor], options[:action]
@@ -41,6 +44,9 @@ module SimpleFaye
       def unsubscribe(*args)
         options = extract_options! args
         options[:channel] = args.shift unless args.empty?
+
+        # uses the default action 'unsubscribe' if :action is not specified
+        options[:action] ||= 'unsubscribe'
 
         options = process_options options, :valid => [:channel, :processor, :action], :require => [:channel, :processor, :action]
 
