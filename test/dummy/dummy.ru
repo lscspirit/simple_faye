@@ -13,10 +13,13 @@ Faye::WebSocket.load_adapter 'thin'
 
 router = SimpleFaye::Extension::Router.new
 router.map_channel do |r|
-  r.map '/test_channel', :command => 'test', :processor => :TestProcessor, :action => :test
-  r.map '/test_channel', :type => :subscribe, :processor => :TestProcessor, :action => :subscribe
-  r.map /^\/regex_channel(\d)$/, :processor => :TestProcessor, :action => :again
-  r.map '/invalid_processor', :processor => :InvalidProcessor, :action => :test
+  r.channel '/test_channel', :processor => TestProcessor do
+    r.publish :command => 'test', :action => :test
+    r.subscribe :action => :subscribe
+  end
+
+  r.publish /^\/regex_channel(\d)$/, :processor => :TestProcessor, :action => :again
+  r.publish '/invalid_processor', :processor => :InvalidProcessor, :action => :test
 end
 
 faye_server = Faye::RackAdapter.new :mount => '/simple_faye', :timeout => 25
